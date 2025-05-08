@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shanghai send a ride ticket agency CO,.LTD</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        body {
+            color: #333;
+            line-height: 1.6;
+            text-align: center;
+            background-color: #7D96F1;
+        }
+
+        /* 头部背景图 */
+       .header {
+            background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+                url('images/company-bg.jpg') center / cover no-repeat;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+       .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* 导航栏 */
+        nav {
+            background: #222;
+            padding: 15px 0;
+        }
+
+       .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0 20px;
+            font-size: 1.1rem;
+        }
+
+        /* 主要内容 */
+       .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+       .section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        /* 公司简介卡片 */
+       .about-card {
+            background: white;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        /* 图片轮播样式 */
+       .slider {
+            position: relative;
+            width: 50%;
+            margin: 20px auto;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        /* 底部轮播图片的 slider 样式 */
+        #bottom-slider {
+            width: 50%;
+        }
+
+       .slider img {
+            display: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            width: 100%; /* 让图片宽度填满容器 */
+            height: auto; /* 高度自适应，保持比例 */
+        }
+
+       .slider img.active {
+            display: block;
+        }
+
+       .slider img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 切换图标样式 */
+       .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+
+       .slider-btn.prev {
+            left: 10px;
+        }
+
+       .slider-btn.next {
+            right: 10px;
+        }
+
+       .slider-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* 隐藏底部轮播图的切换图标 */
+        #bottom-slider .slider-btn {
+            display: none;
+        }
+
+        /* 页脚 */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+       .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            text-align: left;
+        }
+
+       .footer-section {
+            flex: 1;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+           .header h1 {
+                font-size: 2rem;
+            }
+
+           .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav a {
+                display: block;
+                padding: 10px;
+            }
+
+            /* 移动端图片调整 */
+           .slider {
+                width: 80%;
+                margin: 15px auto;
+            }
+
+           .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+           .footer-section {
+                margin-bottom: 10px;
+            }
+        }
+
+        /* 手机端进一步调整轮播图片大小 */
+        @media (max-width: 480px) {
+            /* 让轮播容器宽度与 1.1 - 3.3 图片显示宽度适配 */
+           .slider {
+                width: 100%; /* 修改为 100%，可以根据需求调整 */
+                margin: 15px auto;
+            }
+
+           .slider img {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        /* 将 Our Advantages 字体加粗加宽 */
+        #services h3:last-child {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* WhatsApp 图标样式 */
+       .whatsapp-icon {
+            color: #25D366;
+            margin-right: 5px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 头部背景图 -->
+    <header class="header">
+        <h1>Shanghai send a ride</h1>
+        <p></p>
+    </header>
+
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <a href="#about">About</a>
+            <a href="#services">Our Promotions</a>
+            <a href="#contact">Contact us</a>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <!-- 关于我们 -->
+        <section id="about" class="section">
+            <h2>About&nbsp;</h2>
+            <div class="about-card">
+                <p>&nbsp;</p>
+                <p>Established in 2024, Shanghai Send-a-Ride Ticket Agency Co. offers a wide range of travel and ticketing services, backed by decades of industry experience. We are your top choice for purchasing airline tickets — choosing us means lower costs and greater travel security.Our services include apartment-style hotel bookings, individual and group travel arrangements, and customized travel solutions.Thank you for choosing Shanghai Send-a-Ride Ticket Agency Co. as your preferred travel partner.</p>
+                <p>&nbsp;</p>
+            </div>
+        </section>
+
+        <!-- 服务项目 -->
+        <section id="services" class="section">
+            <h2>Our Promotions</h2>
+            <div class="about-card">
+                <h3>Flight</h3>
+                <p>We have access to the lowest fare classes from airlines, allowing us to offer you the most competitive discounts</p>
+                <div class="slider">
+                    <img src="images/1.1.jpeg" width="1280" height="1706" alt="1.1" class="active">
+                    <img src="images/1.2.jpeg" width="1280" height="1706" alt="1.2">
+                    <img src="images/1.3.jpeg" width="1280" height="1706" alt="1.3">
+                    <button class="slider-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="slider-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+                <h3>Hotel&nbsp;</h3>
+                <p>We provide hotel-style serviced apartments to ensure a comfortable and convenient stay.</p>
+                <div class="slider">
+                    <img src="images/2.1.jpeg" width="1280" height="1706" alt="2.1">
+                    <img src="images/2.2.jpeg" width="1280" height="1706" alt="2.2">
+                    <img src="images/2.3.jpeg" width="1280" height="1706" alt="2.3">
+                    <button class="slider-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="slider-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+                <h3>Our Services&nbsp;</h3>
+                <p>We welcome cooperation in developing and promoting outbound travel products.</p>
+                <div class="slider">
+                    <img src="images/3.1.jpeg" width="1280" height="1706" alt="3.1">
+                    <img src="images/3.2.jpeg" width="1280" height="1706" alt="3.2">
+                    <img src="images/3.3.jpeg" width="1280" height="1706" alt="3.3">
+                    <button class="slider-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="slider-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+                <h3>Our Advantages</h3>
+                <div class="slider" id="bottom-slider">
+                    <img src="images/轮1..jpeg" width="1280" height="1706" alt="轮1" class="active">
+                    <img src="images/轮2.jpg" width="1280" height="1706" alt="轮2">
+                    <img src="images/轮3.jpg" width="1280" height="1706"" alt="轮3">
+                    <button class="slider-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="slider-btn next"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-section">
+                <p>Address：F3-2, BuildingA9,ZoneA, Wenzhou Trade Centre Phase II, Changning County, Sichuan Province, CHINA</p>
+                <p>Chang Ning County, Sichuan Province</p>
+            </div>
+            <div class="footer-section">
+                <p>Hotline：+86 18283158664</p>
+                <p>Email：sales1:1936827672@qq.com</p>
+                <p>sales2:3325743560@qq.com</p>
+                <p>ticket:1620750898@qq.com</p>
+            </div>
+            <div class="footer-section">
+                <p><a href="https://wa.me/message/QU65HUKRNHCWB1"><i class="fab fa-whatsapp whatsapp-icon"></i>whatsapp1: +86 18283158664</a></p>
+                <p><a href="https://wa.me/message/233LFGKG6LG6I1"><i class="fab fa-whatsapp whatsapp-icon"></i>whatsapp2: +86 18884287212</a></p>
+            </div>
+        </div>
+        <p style="margin-top:20px;">Shanghai send a ride ticket agency CO,.LTD</p>
+    </footer>
+
+    <script>
+        const sliders = document.querySelectorAll('.slider');
+        sliders.forEach((slider) => {
+            const slides = slider.querySelectorAll('img');
+            let currentSlide = 0;
+            let touchStartX = 0;
+            let touchEndX = 0;
+            let intervalId;
+
+            function showSlide() {
+                slides.forEach((slide, index) => {
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+            }
+
+            function goToNextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide();
+            }
+
+            function goToPrevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide();
+            }
+
+            function startAutoSlide() {
+                if (slider.id === 'bottom-slider') {
+                    intervalId = setInterval(goToNextSlide, 3000);
+                }
+            }
+
+            function stopAutoSlide() {
+                if (slider.id === 'bottom-slider') {
+                    clearInterval(intervalId);
+                }
+            }
+
+            function handleTouchStart(event) {
+                if (slider.id === 'bottom-slider') {
+                    touchStartX = event.touches[0].clientX;
+                    stopAutoSlide();
+                }
+            }
+
+            function handleTouchEnd(event) {
+                if (slider.id === 'bottom-slider') {
+                    touchEndX = event.changedTouches[0].clientX;
+                    const threshold = 50;
+                    if (touchStartX - touchEndX > threshold) {
+                        goToNextSlide();
+                    } else if (touchEndX - touchStartX > threshold) {
+                        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                        showSlide();
+                    }
+                    startAutoSlide();
+                }
+            }
+
+            const prevBtn = slider.querySelector('.slider-btn.prev');
+            const nextBtn = slider.querySelector('.slider-btn.next');
+
+            if (prevBtn && nextBtn) {
+                prevBtn.addEventListener('click', goToPrevSlide);
+                nextBtn.addEventListener('click', goToNextSlide);
+            }
+
+            if (slider.id === 'bottom-slider') {
+                slider.addEventListener('touchstart', handleTouchStart);
+                slider.addEventListener('touchend', handleTouchEnd);
+            }
+
+            showSlide();
+            startAutoSlide();
+        });
+    </script>
+</body>
+
+</html>    
