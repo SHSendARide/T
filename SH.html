@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAR | Global Flight Services</title>
+    <!-- 新增Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        /* 全局基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", "微软雅黑", sans-serif;
+        }
+
+        body {
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 导航栏基础样式 */
+        .header {
+            background: #fff;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0);
+            transition: all 0.3s;
+            min-height: 60px;
+        }
+
+        .header.scrolled {
+            background: #f8f9fa;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* SAR艺术字logo */
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: #6495ED;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo-text:hover {
+            transform: translateY(-2px);
+        }
+
+        /* PC端导航链接 */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links.scrolled {
+            opacity: 0.9;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6495ED;
+        }
+
+        /* 移动端汉堡菜单 */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            padding: 5px;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-toggle.scrolled .bar {
+            background: #6495ED;
+        }
+
+        .menu-toggle .bar {
+            width: 28px;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        /* 菜单激活时的动画 */
+        .menu-active .bar:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-active .bar:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* 移动端展开菜单 */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            padding: 15px 0;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+
+        .mobile-menu a {
+            display: block;
+            text-align: center;
+            padding: 10px 0;
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .mobile-menu a:hover {
+            color: #6495ED;
+            padding-left: 20px;
+        }
+
+        .mobile-menu a:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 2px;
+            background: #6495ED;
+            transition: width 0.3s;
+        }
+
+        .mobile-menu a:hover:before {
+            width: 20px;
+        }
+
+        /* 头部Banner（关键修改：替换背景图+字体放大） */
+        .hero-banner {
+            height: 500px;
+            margin-top: 80px;
+            background: url("suicai/DH.jpeg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+
+        .hero-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 63px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-slogan {
+            font-size: 30px;
+            opacity: 0.9;
+        }
+
+        /* 公司简介板块 */
+        .intro-section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: #6495ED;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .intro-desc {
+            font-size: 18px;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .intro-desc ul {
+            list-style-type: disc;
+            padding-left: 30px;
+            margin-top: 10px;
+        }
+
+        .intro-desc ul li {
+            margin-bottom: 5px;
+        }
+
+        /* 产品中心板块 */
+        .products-section {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .product-content {
+            padding: 25px;
+        }
+
+        .product-title {
+            color: #6495ED;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .product-features {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .product-features li {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* 核心优势板块 */
+        .advantage-section {
+            padding: 60px 0;
+        }
+
+        .advantage-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .advantage-item {
+            flex: 1;
+            min-width: 280px;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .advantage-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #6495ED;
+            border-radius: 50%;
+            color: white;
+            font-size: 28px;
+        }
+
+        /* 伙伴图片（调整位置和样式） */
+        .partner-logo-container {
+            display: flex;
+            justify-content: center;
+            padding: 15px 0;
+            transform: scale(0.8);
+            transform-origin: center;
+        }
+
+        .partner-logo-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* 联系我们板块 */
+        .contact-section {
+            background: #6495ED;
+            color: #fff;
+            padding: 60px 0;
+        }
+
+        .contact-info {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-info h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .contact-info p {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .contact-info a {
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .contact-info a:hover {
+            color: #e6f7ff;
+            transform: scale(1.05);
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .contact-column {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contact-item {
+            margin-bottom: 25px;
+        }
+
+        .contact-item i {
+            margin-right: 10px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .whatsapp-link {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .whatsapp-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .whatsapp-link i {
+            margin-right: 10px;
+            color: #25D366;
+            font-size: 20px;
+        }
+
+        /* 新版页脚样式 */
+        .footer {
+            background: #4682B4;
+            color: #fff;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 响应式设计（移动端适配，同步放大字体） */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .hero-title {
+                font-size: 42px;
+                margin-bottom: 15px;
+            }
+
+            .hero-slogan {
+                font-size: 24px;
+            }
+
+            .product-list {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-text {
+                font-size: 26px;
+            }
+
+            .hero-banner {
+                margin-top: 70px;
+                height: 400px;
+            }
+
+            .partner-logo-container {
+                transform: scale(0.9);
+            }
+
+            .contact-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .contact-info {
+                padding: 30px 20px;
+            }
+
+            .intro-desc {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="header" id="header">
+        <div class="container nav">
+            <div class="logo-text">SAR</div>
+            <div class="nav-links" id="navLinks">
+                <a href="#intro">About</a>
+                <a href="#products">Product</a>
+                <a href="#advantage">Advantage</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#intro">About</a>
+            <a href="#products">Product</a>
+            <a href="#advantage">Advantage</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- 头部Banner（字体放大后的标题） -->
+    <div class="hero-banner">
+        <div class="container hero-content">
+            <h1 class="hero-title">Send A Ride</h1>
+            <p class="hero-slogan">SAR | Global Flight Services</p>
+        </div>
+    </div>
+
+    <!-- 公司简介 -->
+    <section class="intro-section" id="intro">
+        <div class="container">
+            <h2 class="section-title">About SAR</h2>
+            <ul class="intro-desc">
+                <li>Our company has been specializing in the airline ticket industry for decades, with extensive experience. We provide OTA services in China and act as a flight ticket supplier on major platforms.</li>
+                <li>We have high-quality customer resources both online and offline, and maintain business partnerships with many IATA-accredited travel agencies worldwide. Here are our main advantages:</li>
+                <li>We possess three independent global flight distribution systems, ensuring efficient and diverse access to flight inventory.</li>
+                <li>Our systems offer competitive pricing, allowing us to provide cost-effective solutions for our clients.</li>
+                <li>We collaborate closely with premium airlines, enabling us to offer exclusive deals and services.</li>
+                <li>In addition to air ticket services, we also offer serviced apartments to ensure a comfortable travel and accommodation experience.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 产品中心 -->
+    <section class="products-section" id="products">
+        <div class="container">
+            <h2 class="section-title">Product</h2>
+            <div class="product-list">
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('suicai/CP1.jpg')"></div>
+                    <div class="product-content">
+                        <h3 class="product-title">Air ticketing services</h3>
+                        <ul class="product-features">
+                            <li>Global route coverage, offering special - price air ticket reservations.</li>
+                            <li>A flexible refund, change and rescheduling policy to meet diverse and changeable needs.</li>
+                            <li>24/7 customer service support</li>
+                            <li>Multilingual services to facilitate international travelers.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('suicai/CP2.jpg')"></div>
+                    <div class="product-content">
+                        <h3 class="product-title">Serviced apartments</h3>
+                        <ul class="product-features">
+                            <li>Multiple room types are available to meet different needs.</li>
+                            <li>Fully equipped to provide a home-like comfortable experience.</li>
+                            <li>Long-term stay discounts are offered, which is suitable for business travelers.</li>
+                            <li>24-hour front desk service and security guarantee are provided.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image" style="background-image: url('suicai/CP3.png')"></div>
+                    <div class="product-content">
+                        <h3 class="product-title">Enterprise travel management</h3>
+                        <ul class="product-features">
+                            <li>Customized travel plans to optimize corporate costs</li>
+                            <li>Real-time itinerary management and monitoring</li>
+                            <li>Integrated invoice and reimbursement services</li>
+                            <li>Data analysis and suggestions for travel policy optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心优势 -->
+    <section class="advantage-section" id="advantage">
+        <div class="container">
+            <h2 class="section-title">Advantage</h2>
+            <div class="advantage-list">
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fa-solid fa-plane"></i>
+                    </div>
+                    <h3>Professional aviation services</h3>
+                    <p>Possess 32 technical patents and have experience in formulating 5 industry standards. The core system has passed international certification.</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fa-solid fa-hotel"></i>
+                    </div>
+                    <h3>Comfortable accommodation experience</h3>
+                    <p>Have cooperative apartments in multiple cities around the world and provide comprehensive accommodation solutions.</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fa-solid fa-headphones"></i>
+                    </div>
+                    <h3>All-weather customer support</h3>
+                    <p>Provide 7×24 online support to solve all kinds of your problems.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 伙伴图片（调整位置和样式） -->
+    <div class="partner-logo-container">
+        <img src="suicai/HB.png" alt="合作伙伴" style="max-width: 100%; height: auto;">
+    </div>
+
+    <!-- 联系我们 -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-info">
+                <div class="contact-row">
+                    <div class="contact-column">
+                        <div class="contact-item">
+                            <i class="fa-solid fa-map-marker-alt"></i>
+                            <h4>Company address</h4>
+                            <p>F3-2, BuildingA9,ZoneA, Wenzhou Trade Centre Phase II, Changning County, Sichuan Province, CHINA</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <h4>Contact number</h4>
+                            <p>（0831）7872269</p>
+                            <p>+86 18283158664</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fa-solid fa-envelope"></i>
+                            <h4>International Business Cooperation</h4>
+                            <p>1620750898@qq.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-column">
+                        <div class="contact-item">
+                            <i class="fa-solid fa-briefcase"></i>
+                            <h4>Sales consultation</h4>
+                            <p>748017086@qq.com</p>
+                            <p>1936827672@qq.com</p>
+                            <p>3325743560@qq.com</p>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <h4>WhatsApp</h4>
+                            <a href="https://wa.me/message/QU65HUKRNHCWB1" target="_blank" class="whatsapp-link">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <span>+86 18283158664</span>
+                            </a>
+                            <a href="https://wa.me/message/233LFGKG6LG6I1" target="_blank" class="whatsapp-link">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <span>+86 18884287212</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 新版页脚（仅显示Send A Ride） -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-title">Send A Ride</div>
+        </div>
+    </footer>
+
+    <script>
+        // 滚动时导航栏样式切换
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+                document.getElementById('navLinks').classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+                document.getElementById('navLinks').classList.remove('scrolled');
+            }
+        });
+
+        // 汉堡菜单点击展开/收起
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('menu-active');
+            mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // 点击移动端菜单链接后关闭菜单并平滑定位
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.style.display = 'none';
+                menuToggle.classList.remove('menu-active');
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 60,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 点击其他地方关闭移动端菜单
+        document.addEventListener('click', (e) => {
+            // 如果点击的元素既不是汉堡菜单，也不是菜单本身，并且菜单是打开的，则关闭菜单
+            if (!menuToggle.contains(e.target) && !mobileMenu.contains(e.target) && mobileMenu.style.display === 'block') {
+                mobileMenu.style.display = 'none';
+                menuToggle.classList.remove('menu-active');
+            }
+        });
+    </script>
+</body>
+</html>
